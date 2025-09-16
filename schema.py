@@ -174,6 +174,85 @@ class Token(BaseModel):
     role: str
     full_name: str
 
+class UserProfileOut(BaseModel):
+    id: int
+    role: str
+    email: str
+    terms_and_condition_followed: bool
+    phone_number: str
+    country_code: Optional[str]
+    is_phone_verified: bool
+    last_login: Optional[datetime]
+
+    full_name: str
+    father_husband_name: Optional[str]
+    gender: Optional[str]
+    date_of_birth: Optional[datetime]
+    profile_photo_url: Optional[str]
+
+    aadhaar_number: Optional[str]
+    is_aadhaar_verified: bool
+    aadhaar_linked_mobile: bool
+    pan_number: Optional[str]
+    voter_id: Optional[str]
+
+    current_address: Optional[str]
+    current_village: Optional[str]
+    current_taluka: Optional[str]
+    current_district: Optional[str]
+    current_state: Optional[str]
+    current_pincode: Optional[str]
+    current_gps_lat: Optional[float]
+    current_gps_long: Optional[float]
+
+    permanent_address: Optional[str]
+    permanent_village: Optional[str]
+    permanent_taluka: Optional[str]
+    permanent_district: Optional[str]
+    permanent_state: Optional[str]
+    permanent_pincode: Optional[str]
+
+    total_land_holdings: float
+    owned_land_area: float
+    leased_land_area: float
+    primary_land_type: Optional[str]
+    primary_soil_type: Optional[str]
+    has_irrigation_facility: bool
+    irrigation_type: Optional[str]
+
+    bank_account_number: Optional[str]
+    bank_name: Optional[str]
+    bank_branch: Optional[str]
+    bank_ifsc_code: Optional[str]
+    is_bank_verified: bool
+
+    pm_kisan_beneficiary: bool
+    pm_kisan_id: Optional[str]
+    soil_health_card_id: Optional[str]
+    fasal_bima_policy_number: Optional[str]
+    kisan_credit_card_number: Optional[str]
+
+    family_members_count: int
+    dependents_count: int
+    primary_education_level: Optional[str]
+
+    preferred_language: str
+    notification_enabled: bool
+    sms_alerts_enabled: bool
+    voice_call_enabled: bool
+
+    is_active: bool
+    is_profile_complete: bool
+    profile_completion_percentage: int
+    verification_status: str
+
+    created_at: datetime
+    updated_at: datetime
+    last_profile_update: Optional[datetime]
+
+    class Config:
+        orm_mode = True
+
 # class UserLoginResponse(UserBase):
 #     id: int
 #     role: UserRole

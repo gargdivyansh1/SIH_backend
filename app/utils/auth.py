@@ -20,7 +20,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    jwt_token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ):
     credentials_exception = HTTPException(
@@ -30,7 +30,7 @@ def get_current_user(
     )
 
     try:
-        payload: Dict = verify_token(token)
+        payload: Dict = verify_token(jwt_token)
         print("Decoded Payload:", payload)  
 
         user_id = payload.get("user_id")

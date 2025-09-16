@@ -74,7 +74,7 @@ def register_user(
 @router.post("/login", response_model=Token)
 def login_user(
     user: UserLogin,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Authenticate user with phone number and password
@@ -100,8 +100,7 @@ def login_user(
         )
     
     db_user.last_login = datetime.now() #type:ignore
-    db.commit()
-    
+
     access_token = create_access_token(
         data={
             "sub": str(db_user.id),
@@ -109,6 +108,9 @@ def login_user(
             "role": db_user.role.value
         }
     )
+
+    db_user.jwt_token = access_token #type:ignore
+    db.commit()
     
     return {
         "access_token": access_token,

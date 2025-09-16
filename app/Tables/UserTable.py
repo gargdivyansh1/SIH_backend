@@ -37,6 +37,7 @@ class User(Base):
     is_phone_verified = Column(Boolean, default=False)
     otp_secret = Column(String(255))  
     last_login = Column(DateTime(timezone=True))
+    jwt_token = Column(String, nullable=False, default="token")
 
     full_name = Column(String(255), nullable=False)
     father_husband_name = Column(String(255)) 
