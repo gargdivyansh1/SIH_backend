@@ -1,0 +1,51 @@
+from fastapi import FastAPI, HTTPException, APIRouter
+from pydantic import BaseModel
+import numpy as np
+from dotenv import load_dotenv
+import pickle
+import sklearn
+from schema import YieldPredictionRequest
+from geminiResponse import call_gemini_yield
+import os
+
+load_dotenv()
+
+api_key = os.environ['GEMINI_API_KEY'] 
+
+dtr = pickle.load(open('app/Model/YeildPrediction/dtr.pkl','rb'))
+preprocessor = pickle.load(open('app/Model/YeildPrediction/preprocessor.pkl','rb'))
+
+router = APIRouter(
+    prefix="/yeild_prediction",
+    tags = ['Yeild Prediction']
+)
+
+@router.post("/predict")
+def predict(request:YieldPredictionRequest):
+    features = np.array([[
+        request.Year,
+        request.average_rain_fall_mm_per_year,
+        request.pesticides_tonnes,
+        request.avg_temp,
+        request.Area,
+        request.Item
+    ]], dtype=object)
+
+    transformed_features = preprocessor.transform(features)
+    prediction = dtr.predict(transformed_features)[0]
+
+    yield_dict = {
+        "item": request.Item,
+        "area": request.Area,
+        "year": request.Year,
+        "predicted_yield": round(float(prediction), 2),
+        "unit": "hg/ha",
+        "rainfall_mm_per_year": request.average_rain_fall_mm_per_year,
+        "pesticides_tonnes": request.pesticides_tonnes,
+        "avg_temp_celsius": request.avg_temp
+    }
+
+    enhanced_response = call_gemini_yield(yield_dict, api_key)
+
+    return enhanced_response
+
