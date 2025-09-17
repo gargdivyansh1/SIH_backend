@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.authRoutes import router as AuthRouter
 from app.routes.user import router as UserRouter
 # from app.database.chatbot_database import init_db
-from app.index.chatbot_index import run_conversation_stream
+# from app.index.chatbot_index import run_conversation_stream
 from app.routes.CropPrediction import router as CropPrediction
 
 app = FastAPI(
