@@ -7,6 +7,8 @@ from alembic import context
 from app.config import settings
 from app.database.database import Base
 from app.Tables.UserTable import User
+from app.Tables.YieldPredictionTable import CropPrediction
+from app.Tables.CropRecommendations import CropRecommendation
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

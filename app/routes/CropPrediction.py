@@ -1,4 +1,5 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
+from sqlalchemy.orm import Session
 from schema import CropRequest
 import numpy as np
 from pydantic import BaseModel
@@ -6,6 +7,10 @@ from dotenv import load_dotenv
 import os
 from geminiResponse import call_gemini
 import pickle
+from app.database.database import get_db
+from app.utils.auth import get_current_user
+import json
+from app.Tables.CropRecommendations import CropRecommendation
 
 model = pickle.load(open('app/Model/CropPrediction/model.pkl','rb'))
 sc = pickle.load(open('app/Model/CropPrediction/standscaler.pkl','rb'))
@@ -21,7 +26,11 @@ router = APIRouter(
 )
 
 @router.post("/predict")
-def predict(request: CropRequest):
+def predict(
+    request: CropRequest,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  
+):
     """
         Endpoint for predicting the best crop according to varoious factors
     """
@@ -63,6 +72,25 @@ def predict(request: CropRequest):
         "crop": crop
     }
     
-    json_response = call_gemini(CropMidResponse, api_key)
+    response = call_gemini(CropMidResponse, api_key)
 
-    return json_response
+    new_recommendation = CropRecommendation(
+        user_id=current_user.id, #type:ignore
+        predicted_crop=response["predicted_crop"],
+        suitability_score=str(response.get("suitability_score")),
+        best_planting_time=response.get("best_planting_time"),
+        harvest_period=response.get("harvest_period"),
+        water_requirements=response.get("water_requirements"),
+        fertilizer_recommendations=response.get("fertilizer_recommendations"),
+        soil_condition=response.get("soil_condition"),
+        expected_yield=response.get("expected_yield"),
+        expected_market_price=response.get("expected_market_price"),
+        risk_factors=json.dumps(response.get("risk_factors")),  
+        summary=response.get("summary"),
+    )
+
+    db.add(new_recommendation)
+    db.commit()
+    db.refresh(new_recommendation)
+
+    return response

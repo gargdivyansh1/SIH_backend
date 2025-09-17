@@ -33,7 +33,7 @@ def get_current_user(
         payload: Dict = verify_token(jwt_token)
         print("Decoded Payload:", payload)  
 
-        user_id = payload.get("user_id")
+        user_id = payload.get("sub")
         if not user_id:
             raise credentials_exception
 
