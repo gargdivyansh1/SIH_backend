@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # from app.routes.YeildPrediction import router as yeidlPrediction
 from app.routes.authRoutes import router as AuthRouter
 from app.routes.user import router as UserRouter
-from app.database.chatbot_database import init_db
+# from app.database.chatbot_database import init_db
 from app.index.chatbot_index import run_conversation_stream
 from app.routes.CropPrediction import router as CropPrediction
 
@@ -25,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-init_db()
+# init_db()
 
 # app.include_router(farmer_route)
 # app.include_router(yeidlPrediction)
