@@ -18,31 +18,14 @@ class ChatMessage(BaseModel):
     content: str
 
 # -------- Yeild Prediciton ----------
-class CropYieldRequest(BaseModel):
-    """Request model for crop yield prediction"""
-    crop: str = Field(..., description="Type of crop")
-    season: str = Field(..., description="Growing season")
-    state: str = Field(..., description="State/region")
-    annual_rainfall: float = Field(..., ge=0, le=10000, description="Annual rainfall in mm")
-    pesticide: float = Field(..., ge=0, le=100000, description="Pesticide usage")
-    
-    @validator('crop')
-    def validate_crop(cls, v):
-        return v.strip()
-    
-    @validator('season')
-    def validate_season(cls, v):
-        return v.strip()
-    
-    @validator('state')
-    def validate_state(cls, v):
-        return v.strip()
-    
-class CropYieldResponse(BaseModel):
-    """Response model for crop yield prediction"""
-    predicted_yield: float = Field(..., description="Predicted crop yield")
-    confidence_score: float = Field(..., description="Model confidence (R² score)")
-    input_summary: Dict = Field(..., description="Summary of input parameters")
+
+class YieldPredictionRequest(BaseModel):
+    Year: int
+    average_rain_fall_mm_per_year: float
+    pesticides_tonnes: float
+    avg_temp: float
+    Area: str
+    Item: str
 
 # ------------ Crop Recommendation ---------
 
