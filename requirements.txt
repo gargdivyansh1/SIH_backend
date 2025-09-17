@@ -10,3 +10,4 @@ redis==5.2.1
 uvicorn==0.34.0
 numpy==1.26.4
 alembic==1.15.2
+psycopg2
