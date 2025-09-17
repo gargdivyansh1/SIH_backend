@@ -33,12 +33,12 @@ app.include_router(CropPrediction)
 app.include_router(AuthRouter)
 app.include_router(UserRouter)
 
-@app.websocket("/ws/{user_id}/{session_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: str, session_id: str):
-    await websocket.accept()
-    try:
-        while True:
-            data = await websocket.receive_text()
-            await run_conversation_stream(user_id, session_id, data, websocket)
-    except WebSocketDisconnect:
-        print(f"WebSocket disconnected for {user_id}-{session_id}")
+# @app.websocket("/ws/{user_id}/{session_id}")
+# async def websocket_endpoint(websocket: WebSocket, user_id: str, session_id: str):
+#     await websocket.accept()
+#     try:
+#         while True:
+#             data = await websocket.receive_text()
+#             await run_conversation_stream(user_id, session_id, data, websocket)
+#     except WebSocketDisconnect:
+#         print(f"WebSocket disconnected for {user_id}-{session_id}")
