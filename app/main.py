@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes.ChatBotRoutes import router as farmer_route  
+# from app.routes.ChatBotRoutes import router as farmer_route  
 # from app.routes.YeildPrediction import router as yeidlPrediction
 from app.routes.authRoutes import router as AuthRouter
 from app.routes.user import router as UserRouter
@@ -27,7 +27,7 @@ app.add_middleware(
 
 init_db()
 
-app.include_router(farmer_route)
+# app.include_router(farmer_route)
 # app.include_router(yeidlPrediction)
 app.include_router(CropPrediction)
 app.include_router(AuthRouter)
