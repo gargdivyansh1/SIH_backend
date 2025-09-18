@@ -10,6 +10,7 @@ from geminiResponse import call_gemini_yield
 import os
 from app.utils.auth import get_current_user
 from app.database.database import get_db
+import json
 from app.Tables.YieldPredictionTable import CropPrediction
 
 
@@ -83,3 +84,38 @@ def predict(
 
     return enhanced_response
 
+@router.get("/my_predictions")
+def get_user_yield_predictions(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  
+):
+    """
+    Get all yield predictions of the logged-in user
+    """
+    predictions = db.query(CropPrediction).filter(
+        CropPrediction.user_id == current_user.id  # type: ignore
+    ).all()
+
+    results = []
+    for pred in predictions:
+        results.append({
+            "id": pred.id,
+            "item": pred.item,
+            "area": pred.area,
+            "year": pred.year,
+            "predicted_yield": pred.predicted_yield,
+            "unit": pred.unit,
+            "predicted_crop": pred.predicted_crop,
+            "suitability_score": pred.suitability_score,
+            "best_planting_time": pred.best_planting_time,
+            "harvest_period": pred.harvest_period,
+            "water_requirements": pred.water_requirements,
+            "fertilizer_recommendations": pred.fertilizer_recommendations,
+            "soil_condition": pred.soil_condition,
+            "expected_yield": pred.expected_yield,
+            "expected_market_price": pred.expected_market_price,
+            "summary": pred.summary,
+            "created_at": pred.created_at.isoformat() if pred.created_at else None #type:ignore
+        })
+
+    return {"yield_predictions": results}

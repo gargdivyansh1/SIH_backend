@@ -94,3 +94,36 @@ def predict(
     db.refresh(new_recommendation)
 
     return response
+
+
+@router.get("/recommendations")
+def get_user_recommendations(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  
+):
+    """
+    Get all crop recommendations of the logged-in user
+    """
+    recommendations = db.query(CropRecommendation).filter(
+        CropRecommendation.user_id == current_user.id  # type: ignore
+    ).all()
+
+    results = []
+    for rec in recommendations:
+        results.append({
+            "id": rec.id,
+            "predicted_crop": rec.predicted_crop,
+            "suitability_score": rec.suitability_score,
+            "best_planting_time": rec.best_planting_time,
+            "harvest_period": rec.harvest_period,
+            "water_requirements": rec.water_requirements,
+            "fertilizer_recommendations": rec.fertilizer_recommendations,
+            "soil_condition": rec.soil_condition,
+            "expected_yield": rec.expected_yield,
+            "expected_market_price": rec.expected_market_price,
+            "risk_factors": json.loads(rec.risk_factors) if rec.risk_factors else [], #type:ignore
+            "summary": rec.summary,
+            "created_at": rec.created_at.isoformat() if rec.created_at else None #type:ignore
+        })
+
+    return {"recommendations": results}
