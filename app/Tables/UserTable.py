@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, Boolean, Enum, DateTime, Float, Text, JSON, ForeignKey
 from sqlalchemy.sql import func
 from app.database.database import Base
+from sqlalchemy.orm import relationship
+from app.Tables.Notiifcaitions import Notification
+from app.Tables.Feedbacks import Feedback
 import enum
 
 class UserRole(enum.Enum):
@@ -106,3 +109,6 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     last_profile_update = Column(DateTime(timezone=True))
+
+    notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
+    feedbacks = relationship("Feedback", back_populates="user", cascade="all, delete-orphan")

@@ -287,3 +287,28 @@ class_names = [
     'Tomato___Tomato_mosaic_virus',
     'Tomato___healthy'
 ]
+
+# -------------- Feedback -----------
+
+class FeedbackCreate(BaseModel):
+    rating: int
+    category: str
+    comment: str
+
+# ---------- Notifications ---------
+
+class NotificationCreate(BaseModel):
+    title: str
+    message: str
+    type: str | None = None
+
+class NotificationResponse(BaseModel):
+    id: int
+    title: str
+    message: str
+    type: str | None
+    is_read: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
