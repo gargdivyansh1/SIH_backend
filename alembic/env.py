@@ -11,6 +11,7 @@ from app.Tables.YieldPredictionTable import CropPrediction
 from app.Tables.CropRecommendations import CropRecommendation
 from app.Tables.Feedbacks import Feedback
 from app.Tables.Notiifcaitions import Notification
+from app.Tables.CropGuidance import CropGuidances
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

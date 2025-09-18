@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from pydantic import BaseModel, validator, Field, EmailStr
+from pydantic import constr, conint, confloat
 from typing import Dict, List, Optional
 from enum import Enum
 
@@ -312,3 +313,24 @@ class NotificationResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# ------------- Crop Guidance ----------
+
+class FertilizerData(BaseModel):
+    type: Optional[str] = Field(None, example="Urea, DAP") # type:ignore
+    amount: Optional[float] = Field(None, example=50.0)  # kg/acre  # type:ignore
+    schedule: Optional[str] = Field(None, example="Basal dose at sowing + top dressing 30 days later") # type:ignore
+
+class CropFormRequest(BaseModel):
+    crop: str = Field(..., example="Wheat") # type:ignore
+    land_size: float = Field(..., example=5.0) # type:ignore
+    soil_type: str = Field(..., example="Loamy") # type:ignore
+    location: str = Field(..., example="Punjab, India") # type:ignore
+    irrigation: str = Field(..., example="Drip") # type:ignore
+    fertilizer: Optional[FertilizerData] = None
+    equipment: Optional[str] = Field(None, example="Tractor, Plough") # type:ignore
+    planting_date: Optional[str] = Field(None, example="2025-10-15") # type:ignore
+    growing_season: Optional[str] = Field(None, example="Kharif") # type:ignore
+
+class CropGuidanceResponse(BaseModel):
+    guidance: Dict
